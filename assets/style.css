@@ -1,0 +1,115 @@
+/* Fond global */
+[data-testid="stAppViewContainer"] {
+    background-color: #ffffff !important;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Bannière avec image */
+.banner {
+    position: relative;
+    background-image: url("../assets/bg-title.jpeg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 200px;
+    color: rgb(184, 214, 208);
+    text-align: center;
+    padding: 80px 20px;
+    margin-bottom: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.banner h1, .banner p {
+    position: relative;
+    z-index: 1;
+    margin: 0;
+}
+.banner h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+}
+.banner p {
+    font-size: 1.3rem;
+    margin-top: 10px;
+}
+
+/* Cartes */
+.card {
+    background-color: rgb(238, 255, 254);
+    max-width: 700px;
+    margin: 0 auto 30px auto;
+    padding: 30px 40px;
+    border-radius: 15px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+}
+
+/* Mode clair */
+@media (prefers-color-scheme: light) {
+[data-testid="stAppViewContainer"] {
+    background-color: #ffffff !important;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+    .banner {
+        color: rgb(210, 227, 222);
+    }
+}
+
+/* Mode sombre */
+@media (prefers-color-scheme: dark) {
+    [data-testid="stAppViewContainer"] {
+    background-color: #1e1e1e !important;
+    color: #f0f0f0 !important;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+    .card {
+        background-color: #3d3d3d;
+        color: #f0f0f0;
+    }
+    .banner {
+        min-height: 200px;
+        color: #e4e7e6 !important;
+        text-shadow: 0 2px 6px rgba(0,0,0,0.8);
+    }
+
+    /* Forcer contraste en mode sombre */
+    h1, h2, h3, h4, h5, h6, p, label, span {
+        color: #f0f0f0 !important;
+    }
+
+    input, textarea, select {
+        background-color: #333333 !important;
+        color: #f0f0f0 !important;
+        border: 1px solid #555 !important;
+    }
+
+    button, .stButton>button {
+        background-color: #444444 !important;
+        color: #f0f0f0 !important;
+        border: 1px solid #666 !important;
+    }
+}
+
+.banner h1, .banner p {
+    color: #d9dfdf !important;
+}
+
+/* Forcer le style de la bannière générée par Streamlit */
+div[data-testid="stMarkdownContainer"] .banner {
+    min-height: 220px !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 80px 20px !important;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+/* S'assurer que le texte reste visible */
+div[data-testid="stMarkdownContainer"] .banner h1,
+div[data-testid="stMarkdownContainer"] .banner p {
+    color: #ffffff !important;
+    text-shadow: 0 2px 6px rgba(0,0,0,0.8);
+    margin: 0 !important;
+}
