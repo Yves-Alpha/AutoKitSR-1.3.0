@@ -53,6 +53,7 @@ tessdata_candidates += [
     Path("/usr/local/share/tessdata"),
     Path("/usr/share/tessdata"),
     Path("/usr/share/tesseract-ocr/4.00/tessdata"),
+    Path("/usr/share/tesseract-ocr/5/tessdata"),
     SUPPORT_DIR / "tessdata",  # emplacement perso éventuel
 ]
 TESSDATA_DIR = None
