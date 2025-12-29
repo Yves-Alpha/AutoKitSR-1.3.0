@@ -7,7 +7,6 @@
 /* Bannière avec image */
 .banner {
     position: relative;
-    background-image: url("../assets/bg-title.jpeg");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;

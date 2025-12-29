@@ -23,20 +23,34 @@ import pytesseract
 import shutil
 import os
 import sys
+import base64
+
 # Charger le CSS externe depuis assets
 css_path = Path(__file__).resolve().parent.parent / "assets" / "style.css"
 if css_path.exists():
     with open(css_path) as f:
         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
-# Charger la favicon depuis assets
-favicon_path = Path(__file__).resolve().parent.parent / "assets" / "icon.icns"
-favicon_uri = ""
-if favicon_path.exists():
+# Charger l'image de fond et la convertir en base64
+LOCAL_ASSETS_DIR = Path(__file__).resolve().parent.parent / "assets"
+banner_image_path = LOCAL_ASSETS_DIR / "bg-title.jpeg"
+banner_data_uri = ""
+if banner_image_path.exists():
     try:
-        favicon_uri = favicon_path.resolve().as_uri()
+        with open(banner_image_path, "rb") as f:
+            image_data = base64.b64encode(f.read()).decode()
+            banner_data_uri = f"data:image/jpeg;base64,{image_data}"
     except Exception:
         pass
+
+# Injecter le CSS avec l'image de fond encodée
+if banner_data_uri:
+    banner_css = f"""
+    .banner {{
+        background-image: url("{banner_data_uri}") !important;
+    }}
+    """
+    st.markdown(f"<style>{banner_css}</style>", unsafe_allow_html=True)
 # Find tesseract binary (add /usr/bin for Streamlit Cloud/Debian)
 tesseract_path = shutil.which("tesseract")
 if not tesseract_path:
@@ -90,25 +104,7 @@ else:
     # Environnement développement
     TEMPLATE_DIR = Path(__file__).resolve().parent.parent / "templates"
 
-# Assets directory (relative to app structure or home)
-LOCAL_ASSETS_DIR = Path(__file__).resolve().parent.parent / "assets"
 HOME_ASSETS_DIR = Path.home() / "AutoKitSR"
-
-# Try to find banner image in both locations
-BANNER_IMAGE = None
-for assets_dir in [LOCAL_ASSETS_DIR, HOME_ASSETS_DIR]:
-    candidate = assets_dir / "bg-title.jpeg"
-    if candidate.exists():
-        BANNER_IMAGE = candidate
-        break
-
-# Convert to URI for use in CSS
-BANNER_IMAGE_URI = ""
-if BANNER_IMAGE:
-    try:
-        BANNER_IMAGE_URI = BANNER_IMAGE.resolve().as_uri()
-    except Exception:
-        pass
 
 def normalize_text(s: str) -> str:
     if s is None:
@@ -138,7 +134,8 @@ st.set_page_config(
     page_title="Kit SR Auto",
     layout="centered",
     initial_sidebar_state="collapsed",
-    menu_items={"About": "Kit Stop Rayons - Spécial Francap"}
+    menu_items={"About": "Kit Stop Rayons - Spécial Francap"},
+    page_icon="📦"
 )
 
 with st.container():
