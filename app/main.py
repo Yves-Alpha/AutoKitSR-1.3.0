@@ -28,6 +28,15 @@ css_path = Path(__file__).resolve().parent.parent / "assets" / "style.css"
 if css_path.exists():
     with open(css_path) as f:
         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+
+# Charger la favicon depuis assets
+favicon_path = Path(__file__).resolve().parent.parent / "assets" / "icon.icns"
+favicon_uri = ""
+if favicon_path.exists():
+    try:
+        favicon_uri = favicon_path.resolve().as_uri()
+    except Exception:
+        pass
 # Find tesseract binary (add /usr/bin for Streamlit Cloud/Debian)
 tesseract_path = shutil.which("tesseract")
 if not tesseract_path:
@@ -81,15 +90,25 @@ else:
     # Environnement développement
     TEMPLATE_DIR = Path(__file__).resolve().parent.parent / "templates"
 
-# Assets directory (installed by installer script)
-ASSETS_DIR = Path.home() / "AutoKitSR"
-BANNER_IMAGE = ASSETS_DIR / "bg-title.jpeg"
-try:
-    BANNER_IMAGE_URI = BANNER_IMAGE.resolve().as_uri() if BANNER_IMAGE.exists() else ""
-except Exception:
-    BANNER_IMAGE_URI = ""
+# Assets directory (relative to app structure or home)
+LOCAL_ASSETS_DIR = Path(__file__).resolve().parent.parent / "assets"
+HOME_ASSETS_DIR = Path.home() / "AutoKitSR"
 
-banner_bg_css = f'background-image: url("{BANNER_IMAGE_URI}");' if BANNER_IMAGE_URI else ""
+# Try to find banner image in both locations
+BANNER_IMAGE = None
+for assets_dir in [LOCAL_ASSETS_DIR, HOME_ASSETS_DIR]:
+    candidate = assets_dir / "bg-title.jpeg"
+    if candidate.exists():
+        BANNER_IMAGE = candidate
+        break
+
+# Convert to URI for use in CSS
+BANNER_IMAGE_URI = ""
+if BANNER_IMAGE:
+    try:
+        BANNER_IMAGE_URI = BANNER_IMAGE.resolve().as_uri()
+    except Exception:
+        pass
 
 def normalize_text(s: str) -> str:
     if s is None:
@@ -115,7 +134,12 @@ def ocr_page(page):
         text += pytesseract.image_to_string(img, lang=OCR_LANG, config="--psm 6")
     return text
 
-st.set_page_config(page_title="Extraction de pages PDF par filtre", layout="centered")
+st.set_page_config(
+    page_title="Kit SR Auto",
+    layout="centered",
+    initial_sidebar_state="collapsed",
+    menu_items={"About": "Kit Stop Rayons - Spécial Francap"}
+)
 
 with st.container():
     st.markdown(
